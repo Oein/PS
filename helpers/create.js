@@ -1,0 +1,34 @@
+const inq = require("inquirer");
+const path = require("path");
+const fs = require("fs");
+const { execSync } = require("child_process");
+const prompt = inq.createPromptModule();
+
+prompt({
+  service: {
+    type: "list",
+    choices: ["jungol", "acmicpc", "nypc", "biko"],
+  },
+  type: {
+    type: "list",
+    choices: ["cpp", "py"],
+  },
+  number: {
+    type: "input",
+    message: "문제 번호를 입력하세요.",
+  },
+}).then((ans) => {
+  const ansn = ans.number.toString();
+  const ansTwo = ansn.slice(0, ansn.length - 2);
+  const p = path.join(__dirname, "../", ans.service, ansTwo + "__");
+  if (!fs.existsSync(p)) {
+    fs.mkdirSync(p, {
+      recursive: true,
+    });
+  }
+  const fp = path.join(p, ans.number + "." + ans.type);
+  if (!fs.existsSync(fp)) {
+    fs.writeFileSync(fp, "");
+  }
+  execSync(`code ${fp}`);
+});

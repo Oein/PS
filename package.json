@@ -1,0 +1,11 @@
+{
+  "name": "PS",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Oein/PS.git",
+  "author": "Oein <oein0219@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^8"
+  }
+}
