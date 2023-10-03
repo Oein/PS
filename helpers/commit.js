@@ -11,7 +11,6 @@ const prompt = inq.createPromptModule();
  * @returns
  */
 const run = async (ans) => {
-  if (ans.service == "acmicpc") await createAcmicpcProblem(ans.number);
   const ansn = ans.number.toString();
   const ansTwo = ansn.slice(0, ansn.length - 2);
   const p = path.join(__dirname, "../", ans.service, ansTwo + "__");
