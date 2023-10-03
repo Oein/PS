@@ -27,9 +27,23 @@ prompt({
       recursive: true,
     });
   }
+
+  let code = "";
   const fp = path.join(p, ans.number + "." + ans.type);
   if (!fs.existsSync(fp)) {
-    fs.writeFileSync(fp, "");
+    if (fs.existsSync(path.join(__dirname, "template." + ans.type)))
+      code = fs
+        .readFileSync(path.join(__dirname, "template." + ans.type))
+        .toString();
+    fs.writeFileSync(fp, code);
   }
   execSync(`code ${fp}`);
+  fs.writeFileSync(
+    path.join(__dirname, "last.json"),
+    JSON.stringify({
+      service: ans.service,
+      type: ans.type,
+      number: ans.number,
+    })
+  );
 });
