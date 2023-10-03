@@ -5,7 +5,13 @@ const fs = require("fs");
 const { execSync } = require("child_process");
 const prompt = inq.createPromptModule();
 
-const run = (ans) => {
+/**
+ *
+ * @param {{type:"cpp"|"py";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko";}} ans
+ * @returns
+ */
+const run = async (ans) => {
+  if (ans.service == "acmicpc") await createAcmicpcProblem(ans.number);
   const ansn = ans.number.toString();
   const ansTwo = ansn.slice(0, ansn.length - 2);
   const p = path.join(__dirname, "../", ans.service, ansTwo + "__");
@@ -23,31 +29,37 @@ const run = (ans) => {
   );
 };
 
-prompt({
-  service: {
-    type: "list",
-    choices: ["last", "jungol", "acmicpc", "nypc", "biko"],
-  },
-}).then((ansx) => {
-  if (ansx.service == "last") {
-    if (!fs.existsSync(path.join(__dirname, "last.json"))) {
-      console.log("No last file");
-      return;
-    }
-    run(
-      JSON.parse(fs.readFileSync(path.join(__dirname, "last.json")).toString())
-    );
-  } else
-    prompt({
-      type: {
-        type: "list",
-        choices: ["cpp", "py"],
-      },
-      number: {
-        type: "input",
-        message: "문제 번호를 입력하세요.",
-      },
-    }).then((ansy) => {
-      run({ ...ansx, ...ansy });
-    });
-});
+const main = () => {
+  prompt({
+    service: {
+      type: "list",
+      choices: ["last", "jungol", "acmicpc", "nypc", "biko"],
+    },
+  }).then((ansx) => {
+    if (ansx.service == "last") {
+      if (!fs.existsSync(path.join(__dirname, "last.json"))) {
+        console.log("No last file");
+        return;
+      }
+      run(
+        JSON.parse(
+          fs.readFileSync(path.join(__dirname, "last.json")).toString()
+        )
+      );
+    } else
+      prompt({
+        type: {
+          type: "list",
+          choices: ["cpp", "py"],
+        },
+        number: {
+          type: "input",
+          message: "문제 번호를 입력하세요.",
+        },
+      }).then((ansy) => {
+        run({ ...ansx, ...ansy });
+      });
+  });
+};
+
+main();
