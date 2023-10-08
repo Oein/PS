@@ -9,6 +9,7 @@
 #include <cassert>
 #include <stack>
 #include <cstring>
+#include <climits>
 
 typedef long long ll;
 typedef unsigned long ull;
@@ -23,13 +24,15 @@ typedef long long i64;
 
 using namespace std;
 
-struct Pos {
+struct Pos
+{
     int x;
     int y;
 };
 
 int main()
 {
-    ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-    
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 }
