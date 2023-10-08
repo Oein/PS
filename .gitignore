@@ -3,3 +3,5 @@ node_modules
 
 **/*.bin
 helpers/last.json
+
+**/*.out*
