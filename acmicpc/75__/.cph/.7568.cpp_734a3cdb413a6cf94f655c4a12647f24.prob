@@ -1,0 +1,1 @@
+{"name":"Local: 7568","url":"/Users/dev/oein/Pjs/C++/PS/acmicpc/75__/7568.cpp","tests":[{"id":1696751130139,"input":"5\n55 185\n58 183\n88 186\n60 175\n46 155","output":"2 2 1 2 5"}],"interactive":false,"memoryLimit":128,"timeLimit":1000,"srcPath":"/Users/dev/oein/Pjs/C++/PS/acmicpc/75__/7568.cpp","group":"local","local":true}
