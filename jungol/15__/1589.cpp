@@ -9,6 +9,7 @@
 #include <cassert>
 #include <stack>
 #include <cstring>
+#include <climits>
 
 typedef long long ll;
 typedef unsigned long ull;
@@ -23,493 +24,222 @@ typedef long long i64;
 
 using namespace std;
 
-int oneCnt = 0;
+int dx[] = {0, 0, 1, -1};
+int dy[] = {1, -1, 0, 0};
 
-const char ON = '1';
-const char OFF = '0';
-
-string board[15];
-
-struct Pos {
+struct Pos
+{
     int x;
     int y;
 };
 
-struct Triangle {
-    bool notAble;
-    vector<Pos> pos;
-};
+int searoCnt[15];
+int garoCnt[15];
 
-struct TryerProps {
-    int x;
-    int y;
-    int size;
-};
+Pos triangleStart = {INT_MAX, INT_MAX}, triangleEnd = {-1, -1};
+int triH = -1, triW = -1;
 
-struct LineAbleProps {
-    int y;
-    int xst;
-    int xsz;
-};
+bool garoInc(int inc = 2, int inital = -1)
+{
+    int nowBe = 1;
+    if (inital != -1)
+        nowBe = inital;
+    for (int i = triangleStart.x; i <= triangleEnd.x; i++, nowBe += inc)
+        if (garoCnt[i] != nowBe)
+            return false;
 
-bool lineAble(LineAbleProps props) {
-    for(int i = props.xst; i <= props.xst + props.xsz - 1; i++)
-        if(board[props.y][i] == OFF) return false;
     return true;
 }
 
-Triangle tri1(TryerProps props);
-Triangle tri2(TryerProps props);
-Triangle tri3(TryerProps props);
-Triangle tri4(TryerProps props);
-Triangle tri5(TryerProps props);
-Triangle tri6(TryerProps props);
-Triangle tri7(TryerProps props);
-Triangle tri8(TryerProps props);
+bool garoDec(int dec = 2, int inital = -1)
+{
+    return garoInc(-dec, inital);
+}
 
-// ㅡㅡㅡㅁㅡㅡㅡ
-// ㅡㅡㅁㅁㅁㅡㅡ
-// ㅡㅁㅁㅁㅁㅁㅡ
-// ㅁㅁㅁㅁㅁㅁㅁ => sz4
-// posesGaro
-Triangle tri1(TryerProps props) {
-    Triangle res;
-    res.notAble = false;
-    res.pos.push_back({
-        props.x,
-        props.y + props.size - 1
-    });
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y
-    });
-    res.pos.push_back({
-        props.x + (props.size - 1) * 2,
-        props.y + props.size - 1
-    });
-    
-    if(tri7({
-        props.x,
-        props.y,
-        props.size
-    }).notAble) {
-        res.notAble = 1;
-        return res;
+bool saeroInc(int inc = 2, int inital = -1)
+{
+    int nowBe = 1;
+    if (inital != -1)
+        nowBe = inital;
+    for (int i = triangleStart.y; i <= triangleEnd.y; i++, nowBe += inc)
+        if (searoCnt[i] != nowBe)
+            return false;
+    return true;
+}
+
+bool saeroDec(int dec = 2, int inital = -1)
+{
+    return saeroInc(-dec, inital);
+}
+
+bool saeroIncDec()
+{
+    if (triH % 2 == 0)
+        return false;
+    int nowBe = 1;
+    for (int i = triangleStart.y; i <= triangleEnd.y; i++)
+    {
+        if (searoCnt[i] != nowBe)
+            return false;
+        const int loc = i - triangleStart.y;
+        if (loc < triH / 2) // 절반 까지는 증가
+            nowBe++;
+        else // 절반 이후로는 감소
+            nowBe--;
     }
-    if(tri6({
-        props.x + props.size,
-        props.y + 1,
-        props.size - 1
-    }).notAble) {
-        res.notAble = 1;
-        return res;
+
+    return true;
+}
+
+bool garoIncDec()
+{
+    if (triW % 2 == 0)
+        return false;
+    int nowBe = 1;
+    for (int i = triangleStart.x; i <= triangleEnd.x; i++)
+    {
+        if (garoCnt[i] != nowBe)
+            return false;
+        const int loc = i - triangleStart.x;
+        if (loc < triW / 2) // 절반 까지는 증가
+            nowBe++;
+        else // 절반 이후로는 감소
+            nowBe--;
     }
-    
-    return res;
+
+    return true;
 }
 
-// ㅁㅁㅁㅁㅁㅁㅁ
-// ㅡㅁㅁㅁㅁㅁㅡ
-// ㅡㅡㅁㅁㅁㅡㅡ => sz 4
-// ㅡㅡㅡㅁㅡㅡㅡ
-// posesGaro
-Triangle tri2(TryerProps props) {
-    Triangle res;
-    res.notAble = false;
-    res.pos.push_back({
-        props.x,
-        props.y
-    });
-    res.pos.push_back({
-        props.x + (props.size - 1) * 2,
-        props.y
-    });
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y + props.size - 1
-    });
-    
-    if(tri8({
-        props.x,
-        props.y,
-        props.size
-    }).notAble) {
-        res.notAble = 1;
-        return res;
+// 세로 증가 후 감소 && (가로 2 증가 or 감소)
+bool tri1()
+{
+    if (!saeroIncDec())
+        return false;
+    if (garoInc())
+    {
+        cout << triangleStart.y << " " << triangleEnd.x << "\n";
+        cout << triangleStart.y + triH / 2 << " " << triangleStart.x << "\n";
+        cout << triangleStart.y + triH - 1 << " " << triangleEnd.x << "\n";
     }
-    if(tri5({
-        props.x + props.size,
-        props.y,
-        props.size - 1
-    }).notAble) {
-        res.notAble = 1;
-        return res;
+    else if (garoDec(2, triW * 2 - 1))
+    {
+        cout << triangleStart.y << " " << triangleStart.x << "\n";
+        cout << triangleStart.y + triH / 2 << " " << triangleEnd.x << "\n";
+        cout << triangleStart.y + triH - 1 << " " << triangleStart.x << "\n";
     }
-    
-    return res;
+    return true;
 }
 
-// ㅁㅡㅡ
-// ㅁㅁㅡ
-// ㅁㅁㅁ => sz 3
-// ㅁㅁㅡ
-// ㅁㅡㅡ
-// posesSaero
-Triangle tri3(TryerProps props) {
-    Triangle res;
-    res.notAble = false;
-    res.pos.push_back({
-        props.x,
-        props.y
-    });
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y + props.size - 1
-    });
-    res.pos.push_back({
-        props.x,
-        props.y + (props.size - 1) * 2
-    });
-    
-    if(tri6({
-        props.x,
-        props.y,
-        props.size
-    }).notAble) {
-        res.notAble = 1;
-        return res;
+// (세로 2 증가 or 감소) && 가로 증가 후 감소
+bool tri2()
+{
+    if (!garoIncDec())
+        return false;
+    if (saeroInc())
+    {
+        cout << triangleStart.y << " " << triangleStart.x + triW / 2 << "\n";
+        cout << triangleStart.y + triH - 1 << " " << triangleStart.x << "\n";
+        cout << triangleStart.y + triH - 1 << " " << triangleStart.x + triW - 1 << "\n";
     }
-    if(tri5({
-        props.x,
-        props.y + props.size,
-        props.size - 1
-    }).notAble) {
-        res.notAble = 1;
-        return res;
+    else if (saeroDec(2, triH * 2 - 1))
+    {
+        cout << triangleStart.y << " " << triangleStart.x << "\n";
+        cout << triangleStart.y << " " << triangleStart.x + triW - 1 << "\n";
+        cout << triangleStart.y + triH - 1 << " " << triangleStart.x + triW / 2 << "\n";
     }
-    
-    return res;
-}
-
-// ㅡㅡㅁ
-// ㅡㅁㅁ
-// ㅁㅁㅁ => sz 3
-// ㅡㅁㅁ
-// ㅡㅡㅁ
-// posesSaero
-Triangle tri4(TryerProps props) {
-    Triangle res;
-    res.notAble = false;
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y
-    });
-    res.pos.push_back({
-        props.x,
-        props.y + props.size - 1
-    });
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y + (props.size - 1) * 2
-    });
-    
-    if(tri7({
-        props.x,
-        props.y,
-        props.size
-    }).notAble) {
-        res.notAble = 1;
-        return res;
-    }
-    if(tri8({
-        props.x + 1,
-        props.y + props.size,
-        props.size - 1
-    }).notAble) {
-        res.notAble = 1;
-        return res;
-    }
-    
-    return res;
-}
-
-// ㅁㅁㅁ
-// ㅁㅁㅡ
-// ㅁㅡㅡ
-// posesBySz
-Triangle tri5(TryerProps props) {
-    Triangle res;
-    res.notAble = false;
-    res.pos.push_back({
-        props.x,
-        props.y
-    });
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y
-    });
-    res.pos.push_back({
-        props.x,
-        props.y + props.size - 1
-    });
-    
-    // Y ADDER
-    for(int i = 0;i < props.size;i++)
-        if(!lineAble({
-            props.y + i,
-            props.x,
-            props.size - i
-        })) {
-            res.notAble = true;
-            break;
-        }
-    
-    return res;
-}
-
-// ㅁㅡㅡ
-// ㅁㅁㅡ
-// ㅁㅁㅁ
-// posesBySz
-Triangle tri6(TryerProps props) {
-    Triangle res;
-    res.notAble = false;
-    res.pos.push_back({
-        props.x,
-        props.y
-    });
-    res.pos.push_back({
-        props.x,
-        props.y + props.size - 1
-    });
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y + props.size - 1
-    });
-    
-    // Y ADDER
-    for(int i = 0;i < props.size;i++)
-        if(!lineAble({
-            props.y + i,
-            props.x,
-            i + 1
-        })) {
-            res.notAble = true;
-            break;
-        }
-    
-    return res;
-}
-
-// ㅡㅡㅁ
-// ㅡㅁㅁ
-// ㅁㅁㅁ
-// posesBySz
-Triangle tri7(TryerProps props) {
-    Triangle res;
-    res.notAble = false;
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y
-    });
-    res.pos.push_back({
-        props.x,
-        props.y + props.size - 1
-    });
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y + props.size - 1
-    });
-    
-    // Y ADDER
-    for(int i = 0;
-        i < props.size;
-        i++)
-        if(!lineAble({
-            props.y + i,
-            props.x + props.size - 1 - i,
-            i + 1
-        })) {
-            res.notAble = true;
-            break;
-        }
-    
-    return res;
-}
-
-// ㅁㅁㅁ
-// ㅡㅁㅁ
-// ㅡㅡㅁ
-// posesBySz
-Triangle tri8(TryerProps props) {
-    Triangle res;
-    res.notAble = false;
-    res.pos.push_back({
-        props.x,
-        props.y
-    });
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y
-    });
-    res.pos.push_back({
-        props.x + props.size - 1,
-        props.y + props.size - 1
-    });
-    
-    // Y ADDER
-    for(int i = 0;i < props.size;i++)
-        if(!lineAble({
-            props.y + i,
-            props.x + i,
-            props.size - i
-        })) {
-            res.notAble = true;
-            break;
-        }
-    
-    return res;
-}
-
-// maxSZ ; 10
-vector<Pos> posesBySz(int sz) {
-    vector<Pos> res;
-    for(int i = 1; i + sz - 1 <= 10; i++)
-        for(int j = 1; j + sz - 1 <= 10; j++)
-            res.push_back({i, j});
-    return res;
-}
-
-// maxSZ ; 5
-vector<Pos> posesGaro(int sz) {
-    vector<Pos> res;
-    for(int i = 1; i+(sz-1)*2 <= 10; i++)
-        for(int j = 1; j + sz - 1 <= 10; j++)
-            res.push_back({i, j});
-    return res;
-}
-
-// maxSZ ; 5
-vector<Pos> posesSaero(int sz) {
-    vector<Pos> res;
-    for(int j = 1; j + sz - 1 <= 10; j++)
-        for(int i = 1; i+(sz-1)*2 <= 10; i++)
-            res.push_back({j, i});
-    return res;
-}
-
-int rep(int x) {
-    int a = 0;
-    for(int i = 1; i <= x; i++) a += i;
-    return a;
-}
-
-Triangle tryAll(TryerProps props) {
-    if(rep(props.size) != oneCnt) return {true, {}};
-    Triangle x = tri5(props);
-    if(!x.notAble) return x;
-    x = tri6(props);
-    if(!x.notAble) return x;
-    x = tri7(props);
-    if(!x.notAble) return x;
-    x = tri8(props);
-    return x;
-}
-
-Triangle tryAllSaero(TryerProps props) {
-    
-    if(rep(props.size) + rep(props.size - 1) != oneCnt) return {true, {}};
-    Triangle x = tri3(props);
-    if(!x.notAble) return x;
-    x = tri4(props);
-    return x;
-}
-
-Triangle tryAllGaro(TryerProps props) {
-    if(rep(props.size) + rep(props.size - 1) != oneCnt) return {true, {}};
-    Triangle x = tri1(props);
-    if(!x.notAble) return x;
-    x = tri2(props);
-    return x;
-}
-
-string pos(Pos a) {
-    return to_string(a.x) + "," + to_string(a.y);
-}
-
-void printTri(Triangle t) {
-    sort(t.pos.begin(), t.pos.end(), [](Pos a, Pos b) {
-        if(a.y == b.y) return a.x < b.x;
-        return a.y < b.y;
-    });
-    for(int i = 0;i < t.pos.size();i++) cout << t.pos[i].y << " " << t.pos[i].x << "\n";
+    return true;
 }
 
 int main()
 {
-    for(int i = 1;i <= 10;i++) {
-        cin >> board[i];
-        board[i] = "0" + board[i];
-        for(int j = 0;j < board[i].size();j++)
-            if(board[i][j] == ON) oneCnt++;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    for (int i = 1; i <= 10; i++)
+    {
+        string line;
+        cin >> line;
+        line = "0" + line;
+        for (int j = 1; j <= line.size(); j++)
+        {
+            bool now = line[j] == '1';
+            if (!now)
+                continue;
+
+            searoCnt[i]++;
+            garoCnt[j]++;
+
+            triangleStart.x = min(triangleStart.x, j);
+            triangleStart.y = min(triangleStart.y, i);
+
+            triangleEnd.x = max(triangleEnd.x, j);
+            triangleEnd.y = max(triangleEnd.y, i);
+        }
     }
-    
-    // cout << "ONE" << oneCnt << "\n";
-    
-    bool flag = true;
-    Triangle ans;
-    int anssz = 0;
-    for(int sz = 5; sz >= 1 && flag; sz--)
-        for(Pos pos : posesGaro(sz)) {
-            Triangle t = tryAllGaro({
-                pos.x,
-                pos.y,
-                sz
-            });
-            if(!t.notAble) {
-                if(ans.notAble || anssz < sz) {
-                    ans = t;
-                    anssz = sz;
-                }
-                flag = false;
-                break;
-            }
-        }
-    flag = true;
-    for(int sz = 5; sz >= 1 && flag; sz--)
-        for(Pos pos : posesSaero(sz)) {
-            Triangle t = tryAllSaero({
-                pos.x,
-                pos.y,
-                sz
-            });
-            if(!t.notAble) {
-                if(ans.notAble || anssz < sz) {
-                    ans = t;
-                    anssz = sz;
-                }
-                flag = false;
-                break;
-            }
-        }
-    flag = true;
-    for(int sz = 10; sz >= 1 && flag; sz--)
-        for(Pos pos : posesBySz(sz)) {
-            Triangle t = tryAll({
-                pos.x,
-                pos.y,
-                sz
-            });
-            if(!t.notAble) {
-                if(ans.notAble || anssz < sz) {
-                    ans = t;
-                    anssz = sz;
-                }
-                flag = false;
-                break;
-            }
-        }
-    
-    if(ans.notAble || anssz == 0) cout << "0";
-    else printTri(ans);
+
+    triW = triangleEnd.x - triangleStart.x + 1;
+    triH = triangleEnd.y - triangleStart.y + 1;
+
+    // cout << "W" << triW << " H" << triH << "\n";
+
+    if (tri1())
+        return 0;
+    if (tri2())
+        return 0;
+    if (garoDec(1, triW) && saeroInc(1, 1))
+    {
+        cout << triangleStart.y << " " << triangleStart.x << "\n";
+        cout << triangleEnd.y << " " << triangleStart.x << "\n";
+        cout << triangleEnd.y << " " << triangleEnd.x << "\n";
+        return 0;
+    }
+    if (garoDec(1, triW) && saeroDec(1, triH))
+    {
+        cout << triangleStart.y << " " << triangleStart.x << "\n";
+        cout << triangleStart.y << " " << triangleEnd.x << "\n";
+        cout << triangleEnd.y << " " << triangleStart.x << "\n";
+        return 0;
+    }
+    if (garoInc(1, 1) && saeroInc(1, 1))
+    {
+        cout << triangleStart.y << " " << triangleEnd.x << "\n";
+        cout << triangleEnd.y << " " << triangleStart.x << "\n";
+        cout << triangleEnd.y << " " << triangleEnd.x << "\n";
+        return 0;
+    }
+    if (garoInc(1, 1) && saeroDec(1, triH))
+    {
+        cout << triangleStart.y << " " << triangleStart.x << "\n";
+        cout << triangleStart.y << " " << triangleEnd.x << "\n";
+        cout << triangleEnd.y << " " << triangleEnd.x << "\n";
+        return 0;
+    }
+    cout << "0";
 }
+
+/*
+세로가 증가 후 감소 && (가로가 2씩 증가 || 가로가 2씩 감소)
+(세로가 2씩 증가 || 세로가 2씩 감소) && 가로가 증가 후 감소
+0000000000|0
+0000001000|1
+0000011000|2
+0000111000|3
+0001111000|4
+0000111000|3
+0000011000|2
+0000001000|1
+0000000000|0
+0000000000|0
+==========
+0001357000
+
+(가로 감소 || 가로 증가) && (세로 감소 || 세로 증가)
+00000|0
+01111|4
+01110|3
+01100|2
+01000|1
+=====
+04321
+*/
