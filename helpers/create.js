@@ -139,7 +139,7 @@ const createAcmicpcProblem = async (ans) => {
  * @param {{type:"cpp"|"py";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko";}} ans
  */
 const createJungolProblem = async (ans) => {
-  const api = "https://api.jungol.co.kr/problem/1000";
+  const api = "https://api.jungol.co.kr/problem/" + ans.number.toString();
   axios
     .get(api, {
       responseType: "arraybuffer",
