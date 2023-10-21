@@ -1,0 +1,1 @@
+{"name":"Local: 2671","url":"/Users/dev/oein/Pjs/C++/PS/acmicpc/26__/2671.cpp","tests":[{"input":"10010111\n","output":"NOISE\n","id":1697867130743},{"id":1697867130643,"input":"100000000001101","output":"SUBMARINE"}],"interactive":false,"memoryLimit":128,"timeLimit":1000,"srcPath":"/Users/dev/oein/Pjs/C++/PS/acmicpc/26__/2671.cpp","group":"local","local":true}
