@@ -5,6 +5,10 @@
     "vector": "cpp",
     "deque": "cpp",
     "string": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "iomanip": "cpp",
+    "regex": "cpp",
+    "set": "cpp",
+    "bitset": "cpp"
   }
 }
