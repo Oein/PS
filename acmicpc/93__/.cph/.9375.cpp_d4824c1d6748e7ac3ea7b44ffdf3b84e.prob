@@ -1,0 +1,1 @@
+{"name":"Local: 9375","url":"/Users/dev/oein/Pjs/C++/PS/acmicpc/93__/9375.cpp","tests":[{"id":1698065923156,"input":"2\n3\nhat headgear\nsunglasses eyewear\nturban headgear\n3\nmask face\nsunglasses face\nmakeup face","output":"5\n3"}],"interactive":false,"memoryLimit":128,"timeLimit":1000,"srcPath":"/Users/dev/oein/Pjs/C++/PS/acmicpc/93__/9375.cpp","group":"local","local":true}
