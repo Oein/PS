@@ -9,6 +9,7 @@
     "iomanip": "cpp",
     "regex": "cpp",
     "set": "cpp",
-    "bitset": "cpp"
+    "bitset": "cpp",
+    "map": "cpp"
   }
 }
