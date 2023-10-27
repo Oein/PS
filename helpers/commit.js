@@ -7,7 +7,7 @@ const prompt = inq.createPromptModule();
 
 /**
  *
- * @param {{type:"cpp"|"py";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko";}} ans
+ * @param {{type:"cpp"|"py"|"js";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko";}} ans
  * @returns
  */
 const run = async (ans) => {
@@ -49,7 +49,7 @@ const main = () => {
       prompt({
         type: {
           type: "list",
-          choices: ["cpp", "py"],
+          choices: ["cpp", "py", "js"],
         },
         number: {
           type: "input",

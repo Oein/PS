@@ -92,7 +92,7 @@ const createProp = async (ans, example, memory, time) => {
 
 /**
  *
- * @param {{type:"cpp"|"py";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko";}} ans
+ * @param {{type:"cpp"|"py"|"js";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko";}} ans
  */
 const createAcmicpcProblem = async (ans) => {
   async function getBoj(pid) {
@@ -136,7 +136,7 @@ const createAcmicpcProblem = async (ans) => {
 
 /**
  *
- * @param {{type:"cpp"|"py";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko";}} ans
+ * @param {{type:"cpp"|"py"|"js";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko";}} ans
  */
 const createJungolProblem = async (ans) => {
   const api = "https://api.jungol.co.kr/problem/" + ans.number.toString();
@@ -168,7 +168,7 @@ const main = () => {
     },
     type: {
       type: "list",
-      choices: ["cpp", "py"],
+      choices: ["cpp", "py", "js"],
     },
     number: {
       type: "input",
