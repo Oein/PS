@@ -1,0 +1,1 @@
+{"name":"Local: 7891","url":"/Users/dev/oein/Pjs/C++/PS/acmicpc/78__/7891.cpp","tests":[{"id":1699311606169,"input":"4\n-100 100\n2 3\n0 110101\n-1000000000 1","output":"0\n5\n110101\n-999999999"}],"interactive":false,"memoryLimit":128,"timeLimit":1000,"srcPath":"/Users/dev/oein/Pjs/C++/PS/acmicpc/78__/7891.cpp","group":"local","local":true}
