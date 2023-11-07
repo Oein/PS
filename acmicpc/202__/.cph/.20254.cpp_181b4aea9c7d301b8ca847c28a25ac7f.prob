@@ -1,0 +1,1 @@
+{"name":"Local: 20254","url":"/Users/dev/oein/Pjs/C++/PS/acmicpc/202__/20254.cpp","tests":[{"input":"1 1 1 1\n","output":"100\n","id":1699396798186},{"id":1699396798086,"input":"1 10 100 1000","output":"7696"}],"interactive":false,"memoryLimit":1024,"timeLimit":1000,"srcPath":"/Users/dev/oein/Pjs/C++/PS/acmicpc/202__/20254.cpp","group":"local","local":true}
