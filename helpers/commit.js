@@ -1,4 +1,4 @@
-#!/Users/dev/.nvm/versions/node/v16.20.1/bin/node
+#!node
 const inq = require("inquirer");
 const path = require("path");
 const fs = require("fs");
