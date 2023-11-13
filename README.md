@@ -19,13 +19,13 @@ run
 ### LLDB 중단점 걸기
 
 ```sh
-br -l [Line number]
+br set -l [Line number]
 ```
 
 ### LLDB 조건부 중단점 걸기
 
 ```sh
-br -l [Line number] -c "i == 3"
+br set -l [Line number] -c "i == 3"
 ```
 
 ### LLDB 다음줄
