@@ -10,6 +10,7 @@
     "regex": "cpp",
     "set": "cpp",
     "bitset": "cpp",
-    "map": "cpp"
+    "map": "cpp",
+    "queue": "cpp"
   }
 }
