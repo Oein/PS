@@ -1,0 +1,1 @@
+{"name":"Local: 2038","url":"/Users/oein/oein/Pjs/C++/PS/jungol/20__/2038.cpp","tests":[{"output":"9","input":"7 \r\n-2 -1 \r\n-4 -1 \r\n0 2 \r\n3 1 \r\n5 1 \r\n1 -1 \r\n8 -1","id":1701584088707}],"interactive":false,"memoryLimit":128,"timeLimit":1000,"srcPath":"/Users/oein/oein/Pjs/C++/PS/jungol/20__/2038.cpp","group":"local","local":true}
