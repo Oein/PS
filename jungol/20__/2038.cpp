@@ -1,57 +1,48 @@
-#include <vector>
-#include <algorithm>
-#include <queue>
 #include <iostream>
-#include <map>
-#include <set>
-#include <cstring>
-#include <climits>
+#include <algorithm>
 
 using namespace std;
 
-typedef long long ll;
-typedef pair<int, int> pi_i;
-typedef pair<pair<int, int>, pair<int, int>> ppi_i__pi_i;
-typedef pair<long long, long long> pll_ll;
-typedef vector<int> vi;
-typedef vector<string> vs;
-typedef vector<long long> vll;
-typedef map<int, int> mii;
-typedef map<string, int> ms_i;
-typedef map<string, string> ms_s;
-typedef set<int> si;
-typedef set<string> ss;
-typedef set<long long> sll;
+#define MAX_N 3005
 
-#define MAXN 10005
-vector<pi_i> points;
-int n, dp[MAXN];
+int dp[MAX_N];
+int location[MAX_N];
+int sum[MAX_N];
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
+    int n = 0;
+    int truckCost = 0;
+    int helicopterCost = 0;
     cin >> n;
-    points.push_back({0, 0});
-    for (int i = 0; i < n; i++)
+    for (int i = 1; i <= n; i++)
     {
-        int a, b;
-        cin >> a >> b;
-        points.push_back({a, b});
+        cin >> location[i];
     }
 
-    sort(points.begin() + 1, points.end());
+    sort(location + 1, location + n + 1);
 
     for (int i = 1; i <= n; i++)
     {
-        int maxHeight = 0;
-        dp[i] = 1234567890;
+        sum[i] = sum[i - 1] + location[i];
+    }
+
+    cin >> truckCost >> helicopterCost;
+    for (int i = 1; i <= n; i++)
+    {
+        dp[i] = dp[i - 1] + truckCost * location[i];
+
         for (int j = i; j >= 1; j--)
         {
-            maxHeight = max(maxHeight, abs(points[j].second));
-            dp[i] = min(dp[i], dp[j - 1] + max(2 * maxHeight, points[i].first - points[j].first));
-            //          현재  ,  전거    +                   추가
+            int mid = (i + j) / 2; // i ~ j 까지 heli + truck
+
+            int leftCost = (location[mid] * (mid - j + 1) - (sum[mid] - sum[j - 1])) * truckCost;
+            int rightCost = ((sum[i] - sum[mid - 1]) - (location[mid] * (i - mid + 1))) * truckCost;
+
+            dp[i] = min(dp[i], dp[j - 1] + leftCost + rightCost + helicopterCost);
         }
     }
 
