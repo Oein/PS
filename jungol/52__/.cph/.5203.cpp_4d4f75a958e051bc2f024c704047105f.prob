@@ -1,0 +1,1 @@
+{"name":"Local: 5203","url":"/Users/oein/oein/Pjs/C++/PS/jungol/52__/5203.cpp","tests":[{"output":"1 4 2 5 6 3 7 8 9","input":"9\r\n1 1 1 2 2 3 3 4 3","id":1704008019573},{"id":1704008019473,"input":"3\r\n1 1 1","output":"-1"}],"interactive":false,"memoryLimit":256,"timeLimit":3000,"srcPath":"/Users/oein/oein/Pjs/C++/PS/jungol/52__/5203.cpp","group":"local","local":true}
