@@ -191,4 +191,17 @@ public:
     {
         reverse(vec.begin(), vec.end());
     }
+
+    ostream &operator<<(ostream &os)
+    {
+        os << "CVector(" << vec.size() << ") {";
+        for (size_t i = 0; i < vec.size(); i++)
+        {
+            os << vec[i];
+            if (i != vec.size() - 1)
+                os << ", ";
+        }
+        os << "}";
+        return os;
+    }
 };
