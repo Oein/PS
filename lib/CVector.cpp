@@ -186,4 +186,9 @@ public:
                 cout << sep;
         }
     }
+
+    void reverse()
+    {
+        reverse(vec.begin(), vec.end());
+    }
 };
