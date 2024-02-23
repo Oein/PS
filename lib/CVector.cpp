@@ -192,16 +192,25 @@ public:
         reverse(vec.begin(), vec.end());
     }
 
-    ostream &operator<<(ostream &os)
+    // printable
+    friend std::ostream &operator<<(std::ostream &os, const CVector<T> &vec);
+
+    string to_string(string sep = ", ")
     {
+        ostringstream os(NULL);
         os << "CVector(" << vec.size() << ") {";
         for (size_t i = 0; i < vec.size(); i++)
         {
             os << vec[i];
             if (i != vec.size() - 1)
-                os << ", ";
+                os << sep;
         }
         os << "}";
-        return os;
+        return os.str();
+    }
+
+    void pop_front()
+    {
+        vec.erase(vec.begin());
     }
 };
