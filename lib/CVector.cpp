@@ -1,5 +1,8 @@
 #include <vector>
 #include <algorithm>
+#include <string>
+#include <sstream>
+#include <iostream>
 using namespace std;
 
 template <typename T>
@@ -27,6 +30,10 @@ public:
         {
             vec.push_back(v);
         }
+    }
+    CVector(vector<T> v)
+    {
+        vec = v;
     }
 
     void push(T v)
@@ -141,5 +148,42 @@ public:
     void resize(size_t size)
     {
         vec.resize(size);
+    }
+
+    T sum(T init = 0)
+    {
+        T s = init;
+        for (auto &v : vec)
+        {
+            s += v;
+        }
+        return s;
+    }
+
+    T avg(T init = 0)
+    {
+        return this->sum(init) / vec.size();
+    }
+
+    string join(string sep = " ")
+    {
+        ostringstream os(NULL);
+        for (size_t i = 0; i < vec.size(); i++)
+        {
+            os << vec[i];
+            if (i != vec.size() - 1)
+                os << sep;
+        }
+        return os.str();
+    }
+
+    void joinprintf(string sep = " ")
+    {
+        for (size_t i = 0; i < vec.size(); i++)
+        {
+            cout << vec[i];
+            if (i != vec.size() - 1)
+                cout << sep;
+        }
     }
 };
