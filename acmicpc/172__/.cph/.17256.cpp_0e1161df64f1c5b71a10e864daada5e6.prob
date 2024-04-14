@@ -1,1 +1,0 @@
-{"name":"Local: 17256","url":"/Users/dev/oein/Pjs/C++/PS/acmicpc/172__/17256.cpp","tests":[{"input":"15 16 17\n19 32 90\n","output":"2 2 75\n","id":1699153931467},{"id":1699153931367,"input":"15 8 15\n22 8 22","output":"7 1 7"}],"interactive":false,"memoryLimit":256,"timeLimit":1000,"srcPath":"/Users/dev/oein/Pjs/C++/PS/acmicpc/172__/17256.cpp","group":"local","local":true}

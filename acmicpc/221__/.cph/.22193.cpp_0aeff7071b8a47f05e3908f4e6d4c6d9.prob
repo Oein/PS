@@ -1,1 +1,0 @@
-{"name":"Local: 22193","url":"/Users/dev/oein/Pjs/C++/PS/acmicpc/221__/22193.cpp","tests":[{"input":"3 4\n123\n4567\n","output":"561741\n","id":1699270948641},{"id":1699270948541,"input":"3 1\n100\n0","output":"0"}],"interactive":false,"memoryLimit":128,"timeLimit":2000,"srcPath":"/Users/dev/oein/Pjs/C++/PS/acmicpc/221__/22193.cpp","group":"local","local":true}

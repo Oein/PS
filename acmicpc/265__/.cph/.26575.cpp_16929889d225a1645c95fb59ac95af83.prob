@@ -1,1 +1,0 @@
-{"name":"Local: 26575","url":"/Users/oein/oein/Pjs/C++/PS/acmicpc/265__/26575.cpp","tests":[{"id":1702383306338,"input":"3\n3 2 1\n5 .16 4.54\n3 3.7 3.6","output":"$6.00\n$3.63\n$39.96"}],"interactive":false,"memoryLimit":1024,"timeLimit":1000,"srcPath":"/Users/oein/oein/Pjs/C++/PS/acmicpc/265__/26575.cpp","group":"local","local":true}

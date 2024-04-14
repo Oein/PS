@@ -1,1 +1,0 @@
-{"name":"Local: 7785","url":"/Users/dev/oein/Pjs/C++/PS/acmicpc/77__/7785.cpp","tests":[{"id":1696491204482,"input":"4\nBaha enter\nAskar enter\nBaha leave\nArtem enter","output":"Askar\nArtem"}],"interactive":false,"memoryLimit":256,"timeLimit":1000,"srcPath":"/Users/dev/oein/Pjs/C++/PS/acmicpc/77__/7785.cpp","group":"local","local":true}
