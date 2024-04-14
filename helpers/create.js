@@ -208,7 +208,23 @@ const main = () => {
     }
     if (!hasCPH(ans)) await createCPH(ans);
     const md = path.join(p, "README.md");
-    if (!fs.existsSync(md)) fs.writeFileSync(md, "");
+    if (!fs.existsSync(md))
+      fs.writeFileSync(
+        md,
+        "# " +
+          ans.number +
+          "\n\nProblem from [" +
+          ans.service +
+          "](" +
+          (() => {
+            if (ans.service == "jungol")
+              return "https://jungol.co.kr/problem/" + ans.number;
+            if (ans.service == "acmicpc")
+              return "https://www.acmicpc.net/problem/" + ans.number;
+            return "";
+          })() +
+          ")\n\n"
+      );
     execSync(`code ${fp}`);
     fs.writeFileSync(
       path.join(__dirname, "last.json"),
