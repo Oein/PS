@@ -20,10 +20,9 @@ const run = async (ans) => {
     console.log("파일이 존재하지 않습니다.");
     return;
   }
-  const prop = path.join(p, `.cph`, `.${ans.number}.${ans.type}*`);
   console.log(
     execSync(
-      `git add ${fp}; git add ${prop}; git commit -m "solve: ${ans.service} / ${ans.number}.${ans.type}"`
+      `git add ${fp}; git commit -m "solve: ${ans.service} / ${ans.number}.${ans.type}"`
     ).toString()
   );
 };
