@@ -47,8 +47,7 @@ int rmain()
         return 2;
     if (dist == r1 + r2 || dist == dist2) // 교점이 1개
         return 1;
-    // 만나는 점이 없음
-    if (r1 + r2 < dist || dist < dist2 || (dist == 0 && r1 != r2))
+    if (r1 + r2 < dist || dist < dist2 || (dist == 0 && r1 != r2)) // 만나는 점이 없음
         return 0;
     return -1;
 }
