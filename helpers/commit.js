@@ -28,10 +28,22 @@ const run = async (ans) => {
 };
 
 const main = () => {
+  const last = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "last.json")).toString()
+  );
   prompt({
     service: {
       type: "list",
-      choices: ["last", "jungol", "acmicpc", "nypc", "biko"],
+      choices: [
+        {
+          name: `last (${last.service} / ${last.number}.${last.type})`,
+          value: "last",
+        },
+        "jungol",
+        "acmicpc",
+        "nypc",
+        "biko",
+      ],
     },
   }).then((ansx) => {
     if (ansx.service == "last") {
@@ -39,11 +51,7 @@ const main = () => {
         console.log("No last file");
         return;
       }
-      run(
-        JSON.parse(
-          fs.readFileSync(path.join(__dirname, "last.json")).toString()
-        )
-      );
+      run(last);
     } else
       prompt({
         type: {
