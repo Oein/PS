@@ -1,1 +1,0 @@
-{"name":"Local: 1017","url":"/Users/oein/oein/Pjs/C++/PS/jungol/10__/1017.cpp","tests":[{"id":1702188898255,"input":"8\r\n0 7 1\r\n3 4 1\r\n6 8 1\r\n8 6 1\r\n12 2 0\r\n13 2 1\r\n14 2 1\r\n15 7 1","output":"6"}],"interactive":false,"memoryLimit":256,"timeLimit":1000,"srcPath":"/Users/oein/oein/Pjs/C++/PS/jungol/10__/1017.cpp","group":"local","local":true}
