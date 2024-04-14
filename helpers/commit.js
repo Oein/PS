@@ -15,7 +15,7 @@ const run = async (ans) => {
   const ansTwo = ansn.slice(0, ansn.length - 2);
   const p = path.join(__dirname, "../", ans.service, ansTwo + "__");
 
-  const fp = path.join(p, ans.number + "." + ans.type);
+  const fp = path.join(p, ans.number);
   if (!fs.existsSync(fp)) {
     console.log("파일이 존재하지 않습니다.");
     return;

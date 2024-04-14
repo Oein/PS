@@ -52,7 +52,14 @@ const hasCPH = (ans) => {
 const createProp = async (ans, example, memory, time) => {
   const ansn = ans.number.toString();
   const ansTwo = ansn.slice(0, ansn.length - 2);
-  const p = path.join(__dirname, "../", ans.service, ansTwo + "__", ".cph");
+  const p = path.join(
+    __dirname,
+    "../",
+    ans.service,
+    ansTwo + "__",
+    ans.number,
+    ".cph"
+  );
   const f = path.join(
     p,
     "." +
@@ -177,7 +184,13 @@ const main = () => {
   }).then(async (ans) => {
     const ansn = ans.number.toString();
     const ansTwo = ansn.slice(0, ansn.length - 2);
-    const p = path.join(__dirname, "../", ans.service, ansTwo + "__");
+    const p = path.join(
+      __dirname,
+      "../",
+      ans.service,
+      ansTwo + "__",
+      ans.number
+    );
     if (!fs.existsSync(p)) {
       fs.mkdirSync(p, {
         recursive: true,
@@ -194,6 +207,8 @@ const main = () => {
       fs.writeFileSync(fp, code);
     }
     if (!hasCPH(ans)) await createCPH(ans);
+    const md = path.join(p, "README.md");
+    if (!fs.existsSync(md)) fs.writeFileSync(md, "");
     execSync(`code ${fp}`);
     fs.writeFileSync(
       path.join(__dirname, "last.json"),
