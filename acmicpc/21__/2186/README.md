@@ -10,7 +10,4 @@ ZBQP
 
 BREAK
 
-K Max = 5
-LoopOnce = 20
-
-100 * 100 * 20 = 200,000
+그냥 DFS 돌리는데 TLE 나니까 Caching을 함 됨.
