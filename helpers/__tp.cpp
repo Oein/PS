@@ -1,15 +1,15 @@
-#include <vector>
 #include <algorithm>
-#include <queue>
+#include <cassert>
+#include <climits>
+#include <cstring>
 #include <iostream>
 #include <map>
-#include <set>
 #include <math.h>
 #include <numeric>
-#include <cassert>
+#include <queue>
+#include <set>
 #include <stack>
-#include <cstring>
-#include <climits>
+#include <vector>
 
 typedef long long ll;
 typedef unsigned long ull;
@@ -27,15 +27,13 @@ using namespace std;
 int dx[] = {0, 0, 1, -1};
 int dy[] = {1, -1, 0, 0};
 
-struct Pos
-{
-    int x;
-    int y;
+struct Pos {
+  int x;
+  int y;
 };
 
-int main()
-{
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
+int main() {
+  ios_base::sync_with_stdio(0);
+  cin.tie(0);
+  cout.tie(0);
 }

@@ -37,7 +37,7 @@ const hasCPH = (ans) => {
       ans.type +
       "_" +
       rand(path.join(p, "..", ansn + "." + ans.type)) +
-      ".prob"
+      ".prob",
   );
   return fs.existsSync(f);
 };
@@ -58,7 +58,7 @@ const createProp = async (ans, example, memory, time) => {
     ans.service,
     ansTwo + "__",
     ans.number,
-    ".cph"
+    ".cph",
   );
   const f = path.join(
     p,
@@ -68,7 +68,7 @@ const createProp = async (ans, example, memory, time) => {
       ans.type +
       "_" +
       rand(path.join(p, "..", ansn + "." + ans.type)) +
-      ".prob"
+      ".prob",
   );
 
   if (!fs.existsSync(p))
@@ -93,7 +93,7 @@ const createProp = async (ans, example, memory, time) => {
       srcPath: path.join(p, "..", ansn + "." + ans.type),
       group: "local",
       local: true,
-    })
+    }),
   );
 };
 
@@ -109,7 +109,7 @@ const createAcmicpcProblem = async (ans) => {
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
         },
-      }
+      },
     );
     let $ = cheerio.load(x.data);
     let samples = [];
@@ -189,7 +189,7 @@ const main = () => {
       "../",
       ans.service,
       ansTwo + "__",
-      ans.number
+      ans.number,
     );
     if (!fs.existsSync(p)) {
       fs.mkdirSync(p, {
@@ -200,9 +200,9 @@ const main = () => {
     let code = "";
     const fp = path.join(p, ans.number + "." + ans.type);
     if (!fs.existsSync(fp)) {
-      if (fs.existsSync(path.join(__dirname, "template." + ans.type)))
+      if (fs.existsSync(path.join(__dirname, "__tp." + ans.type)))
         code = fs
-          .readFileSync(path.join(__dirname, "template." + ans.type))
+          .readFileSync(path.join(__dirname, "__tp." + ans.type))
           .toString();
       fs.writeFileSync(fp, code);
     }
@@ -223,16 +223,16 @@ const main = () => {
               return "https://www.acmicpc.net/problem/" + ans.number;
             return "";
           })() +
-          ")\n\n"
+          ")\n\n",
       );
-    execSync(`code ${fp}`);
+    execSync(`zed ${fp}`);
     fs.writeFileSync(
       path.join(__dirname, "last.json"),
       JSON.stringify({
         service: ans.service,
         type: ans.type,
         number: ans.number,
-      })
+      }),
     );
   });
 };
