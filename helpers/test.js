@@ -1,9 +1,10 @@
-#!node
-const inq = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 const { exec, execSync, execFile, spawn } = require("child_process");
-const prompt = inq.createPromptModule();
+
+const chlx = require("./chalk").default;
+var term = require("terminal-kit").terminal;
+const chl = new chlx(term);
 
 const crypto = require("crypto");
 
@@ -34,7 +35,7 @@ const commands = {
 
 /**
  *
- * @param {{type:"cpp"|"py"|"js";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko";}} ans
+ * @param {{type:"cpp"|"py"|"js";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko"|"custom";}} ans
  * @returns
  */
 const run = async (ans) => {
@@ -43,10 +44,13 @@ const run = async (ans) => {
   const p = path.join(__dirname, "..", ans.service, ansTwo + "__");
 
   // 저장된 폴더
-  const fp = path.join(p, ans.number);
+  let fp = path.join(p, ans.number);
+  if (ans.service == "custom") {
+    fp = path.join(__dirname, "..", "custom", ans.number);
+  }
   if (!fs.existsSync(fp)) {
-    console.log("파일이 존재하지 않습니다.");
-    return;
+    chl.error("문제 폴더가 존재하지 않습니다.");
+    process.exit(1);
   }
 
   // 소스코드 파일 경로
@@ -54,19 +58,19 @@ const run = async (ans) => {
   const cphPath = path.join(
     fp,
     ".cph",
-    "." + ansn + "." + ans.type + "_" + rand(filePath) + ".prob",
+    "." + ansn + "." + ans.type + "_" + rand(filePath) + ".prob"
   );
 
   // 소스코드 파일이 존재하지 않을 경우
   // cph 파일이 존재하지 않을 경우
   if (!fs.existsSync(filePath)) {
-    console.log("파일이 존재하지 않습니다 FILE");
-    return;
+    chl.error("소스코드 파일이 존재하지 않습니다.");
+    process.exit(1);
   }
 
   if (!fs.existsSync(cphPath)) {
-    console.log("파일이 존재하지 않습니다 CPH");
-    return;
+    chl.error("CPH 파일이 존재하지 않습니다");
+    process.exit(1);
   }
 
   const commandSet = commands[ans.type];
@@ -75,12 +79,17 @@ const run = async (ans) => {
 
   // 빌드
   if (commandSet.build) {
+    chl.loading("");
+    const spinner = await term.spinner("bitDots");
+    term(" 빌드중...");
     execSync(
       commandSet.build
         .replace("$OUT", buildOUTPUTPath)
-        .replace("$SRC", filePath),
+        .replace("$SRC", filePath)
     );
-    console.log("[Build ✅] Build Done");
+    spinner.animate(0);
+    term("\n");
+    chl.success("빌드 성공!\n");
   }
 
   // test
@@ -136,22 +145,33 @@ const run = async (ans) => {
     return trimmer(a) == trimmer(b);
   };
 
+  chl.loading("");
+  const pgbar = term.progressBar({
+    width: 80,
+    eta: true,
+    percent: true,
+    title: "테스트 진행중",
+  });
+
+  const results = [];
+
   let i = 0;
+  let allSuccess = true;
   for (const test of CPH.tests) {
     i++;
     await new Promise((res) => {
       const child = spawn(
-        commandSet.run
-          .replace("$SRC", cphPath)
-          .replace("$OUT", buildOUTPUTPath),
+        commandSet.run.replace("$SRC", cphPath).replace("$OUT", buildOUTPUTPath)
       );
       const tout = setTimeout(
         () => {
           child.kill();
-          console.log(`[Test ${i} ⏰] Test Timeout`);
+          results.push({
+            type: "timeout",
+          });
           res();
         },
-        CPH.timeLimit == 0 ? 1000 : CPH.timeLimit,
+        CPH.timeLimit == 0 ? 1000 : CPH.timeLimit
       );
       child.stdin.write(test.input);
       let buf = "";
@@ -161,61 +181,121 @@ const run = async (ans) => {
       child.stdout.on("end", () => {
         clearTimeout(tout);
         if (matcher(buf, test.output)) {
-          console.log(`[Test ${i} ✅] Test Passed`);
+          results.push({
+            type: "success",
+          });
         } else {
-          console.log(`[Test ${i} ❌] Test Unmatch`);
-          if (process.env.PRINTRES) {
-            console.log("Expected ================================");
-            console.log(test.output);
-            console.log("Received ================================");
-            console.log(buf);
-          }
+          allSuccess = false;
+          results.push({
+            type: "fail",
+          });
+          fs.writeFileSync(
+            path.join(fp, "run_" + i + ".expected"),
+            test.output
+          );
+          fs.writeFileSync(path.join(fp, "run_" + i + ".received"), buf);
         }
         res();
       });
     });
+    pgbar.update(i / CPH.tests.length);
   }
+
+  pgbar.stop();
+
+  term("\n");
+
+  if (allSuccess) {
+    chl.info("테스트 결과\n");
+    chl.success("모든 테스트를 통과했습니다.");
+    process.exit(0);
+  }
+
+  const colSel = () => {
+    term.clear();
+    chl.info("테스트 결과\n");
+    term.singleColumnMenu(
+      [
+        "Exit",
+        ...results.map((v, i) => {
+          return v.type == "success"
+            ? `#${i + 1} 테스트: 성공`
+            : v.type == "fail"
+            ? `#${i + 1} 테스트: 실패`
+            : `#${i + 1} 테스트: 시간 초과`;
+        }),
+      ],
+      (err, arg) => {
+        let idx = arg.selectedIndex;
+        if (idx == 0) process.exit(0);
+        idx--;
+        if (results[idx].type != "fail") {
+          colSel();
+          return;
+        }
+        term("\n");
+        execSync(
+          `${PRO} --diff ${path.join(
+            fp,
+            "run_" + (idx + 1) + ".expected"
+          )} ${path.join(fp, "run_" + (idx + 1) + ".received")}`
+        );
+        colSel();
+      }
+    );
+  };
+  colSel();
 };
 
 const main = () => {
-  const last = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "last.json")).toString(),
-  );
-  prompt({
-    service: {
-      type: "list",
-      choices: [
-        {
-          name: `last (${last.service} / ${last.number}.${last.type})`,
-          value: "last",
-        },
-        "jungol",
-        "acmicpc",
-        "nypc",
-        "biko",
-      ],
-    },
-  }).then((ansx) => {
-    if (ansx.service == "last") {
-      if (!fs.existsSync(path.join(__dirname, "last.json"))) {
-        console.log("No last file");
+  term.clear();
+  const lastExsist = fs.existsSync(path.join(__dirname, "last.json"));
+  const lastStr = () => {
+    const last = JSON.parse(
+      fs.readFileSync(path.join(__dirname, "last.json")).toString()
+    );
+    return `last (${last.service} / ${last.number}.${last.type})`;
+  };
+  chl.query("서비스를 선택하세요.");
+  term.singleColumnMenu(
+    [
+      lastExsist ? lastStr() : "",
+      "jungol",
+      "acmicpc",
+      "nypc",
+      "biko",
+      "custom",
+    ].filter((x) => x.length > 0),
+    (err, arg) => {
+      const idx = arg.selectedIndex;
+
+      if (idx == 0) {
+        if (!fs.existsSync(path.join(__dirname, "last.json"))) {
+          chl.error("마지막으로 사용한 파일이 없습니다.");
+          process.exit(1);
+        }
+
+        const last = JSON.parse(
+          fs.readFileSync(path.join(__dirname, "last.json")).toString()
+        );
+        run(last);
+
         return;
       }
-      run(last);
-    } else
-      prompt({
-        type: {
-          type: "list",
-          choices: ["cpp", "py", "js"],
-        },
-        number: {
-          type: "input",
-          message: "문제 번호를 입력하세요.",
-        },
-      }).then((ansy) => {
-        run({ ...ansx, ...ansy });
+
+      chl.query("언어를 선택하세요.");
+      term.singleColumnMenu(["cpp", "py", "js"], (err, larg) => {
+        chl.query("문제 번호를 입력하세요: ");
+        term.inputField({}, (err, num) => {
+          run({
+            service: arg.selectedText,
+            type: larg.selectedText,
+            number: num,
+          });
+        });
       });
-  });
+    }
+  );
 };
 
 main();

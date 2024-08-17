@@ -1,15 +1,17 @@
-#!node
-const inq = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 const { execSync } = require("child_process");
-const prompt = inq.createPromptModule();
 
 const { default: axios } = require("axios");
 const { BSON } = require("bson");
 
 const crypto = require("crypto");
 const cheerio = require("cheerio");
+const { PRO } = require("./const");
+
+const chlx = require("./chalk").default;
+var term = require("terminal-kit").terminal;
+const chl = new chlx(term);
 
 /**
  *
@@ -37,7 +39,7 @@ const hasCPH = (ans) => {
       ans.type +
       "_" +
       rand(path.join(p, "..", ansn + "." + ans.type)) +
-      ".prob",
+      ".prob"
   );
   return fs.existsSync(f);
 };
@@ -58,7 +60,7 @@ const createProp = async (ans, example, memory, time) => {
     ans.service,
     ansTwo + "__",
     ans.number,
-    ".cph",
+    ".cph"
   );
   const f = path.join(
     p,
@@ -68,7 +70,7 @@ const createProp = async (ans, example, memory, time) => {
       ans.type +
       "_" +
       rand(path.join(p, "..", ansn + "." + ans.type)) +
-      ".prob",
+      ".prob"
   );
 
   if (!fs.existsSync(p))
@@ -93,7 +95,7 @@ const createProp = async (ans, example, memory, time) => {
       srcPath: path.join(p, "..", ansn + "." + ans.type),
       group: "local",
       local: true,
-    }),
+    })
   );
 };
 
@@ -109,7 +111,7 @@ const createAcmicpcProblem = async (ans) => {
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
         },
-      },
+      }
     );
     let $ = cheerio.load(x.data);
     let samples = [];
@@ -168,73 +170,85 @@ const createCPH = async (ans) => {
 };
 
 const main = () => {
-  prompt({
-    service: {
-      type: "list",
-      choices: ["jungol", "acmicpc", "nypc", "biko"],
-    },
-    type: {
-      type: "list",
-      choices: ["cpp", "py", "js"],
-    },
-    number: {
-      type: "input",
-      message: "문제 번호를 입력하세요.",
-    },
-  }).then(async (ans) => {
-    const ansn = ans.number.toString();
-    const ansTwo = ansn.slice(0, ansn.length - 2);
-    const p = path.join(
-      __dirname,
-      "../",
-      ans.service,
-      ansTwo + "__",
-      ans.number,
-    );
-    if (!fs.existsSync(p)) {
-      fs.mkdirSync(p, {
-        recursive: true,
+  chl.query("서비스를 선택하세요.");
+  term.singleColumnMenu(
+    ["jungol", "acmicpc", "nypc", "biko", "custom"].filter((x) => x.length > 0),
+    (err, arg) => {
+      const idx = arg.selectedIndex;
+
+      chl.query("언어를 선택하세요.");
+      term.singleColumnMenu(["cpp", "py", "js"], (err, larg) => {
+        chl.query("문제 번호를 입력하세요: ");
+        term.inputField({}, async (err, num) => {
+          const ans = {
+            service: arg.selectedText,
+            type: larg.selectedText,
+            number: num,
+          };
+
+          const ansn = ans.number.toString();
+          const ansTwo = ansn.slice(0, ansn.length - 2);
+          let p = path.join(
+            __dirname,
+            "..",
+            ans.service,
+            ansTwo + "__",
+            ans.number
+          );
+          if (ans.service == "custom")
+            p = path.join(__dirname, "..", "custom", ans.number);
+          if (!fs.existsSync(p)) {
+            fs.mkdirSync(p, {
+              recursive: true,
+            });
+          }
+
+          let code = "";
+          const fp = path.join(p, ans.number + "." + ans.type);
+          if (!fs.existsSync(fp)) {
+            if (fs.existsSync(path.join(__dirname, "__tp." + ans.type)))
+              code = fs
+                .readFileSync(path.join(__dirname, "__tp." + ans.type))
+                .toString();
+            fs.writeFileSync(fp, code);
+          }
+          if (!hasCPH(ans)) await createCPH(ans);
+          const md = path.join(p, "README.md");
+          if (!fs.existsSync(md)) {
+            if (ans.service == "custom") {
+              fs.writeFileSync(md, `# Custom Problem ${ans.number}\n\n`);
+            } else
+              fs.writeFileSync(
+                md,
+                "# " +
+                  ans.number +
+                  "\n\nProblem from [" +
+                  ans.service +
+                  "](" +
+                  (() => {
+                    if (ans.service == "jungol")
+                      return "https://jungol.co.kr/problem/" + ans.number;
+                    if (ans.service == "acmicpc")
+                      return "https://www.acmicpc.net/problem/" + ans.number;
+                    return "";
+                  })() +
+                  ")\n\n"
+              );
+          }
+          execSync(`${PRO} ${fp}`);
+          fs.writeFileSync(
+            path.join(__dirname, "last.json"),
+            JSON.stringify({
+              service: ans.service,
+              type: ans.type,
+              number: ans.number,
+            })
+          );
+          process.exit(0);
+        });
       });
     }
-
-    let code = "";
-    const fp = path.join(p, ans.number + "." + ans.type);
-    if (!fs.existsSync(fp)) {
-      if (fs.existsSync(path.join(__dirname, "__tp." + ans.type)))
-        code = fs
-          .readFileSync(path.join(__dirname, "__tp." + ans.type))
-          .toString();
-      fs.writeFileSync(fp, code);
-    }
-    if (!hasCPH(ans)) await createCPH(ans);
-    const md = path.join(p, "README.md");
-    if (!fs.existsSync(md))
-      fs.writeFileSync(
-        md,
-        "# " +
-          ans.number +
-          "\n\nProblem from [" +
-          ans.service +
-          "](" +
-          (() => {
-            if (ans.service == "jungol")
-              return "https://jungol.co.kr/problem/" + ans.number;
-            if (ans.service == "acmicpc")
-              return "https://www.acmicpc.net/problem/" + ans.number;
-            return "";
-          })() +
-          ")\n\n",
-      );
-    execSync(`zed ${fp}`);
-    fs.writeFileSync(
-      path.join(__dirname, "last.json"),
-      JSON.stringify({
-        service: ans.service,
-        type: ans.type,
-        number: ans.number,
-      }),
-    );
-  });
+  );
 };
 
 main();
