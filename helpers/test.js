@@ -8,6 +8,10 @@ const chl = new chlx(term);
 
 const crypto = require("crypto");
 
+process.stdin.on("data", (data) => {
+  if (data.toString() === "\u0003") term.processExit(0);
+});
+
 /**
  *
  * @param {string} srcPath
@@ -50,7 +54,7 @@ const run = async (ans) => {
   }
   if (!fs.existsSync(fp)) {
     chl.error("문제 폴더가 존재하지 않습니다.");
-    process.exit(1);
+    term.processExit(1);
   }
 
   // 소스코드 파일 경로
@@ -65,12 +69,12 @@ const run = async (ans) => {
   // cph 파일이 존재하지 않을 경우
   if (!fs.existsSync(filePath)) {
     chl.error("소스코드 파일이 존재하지 않습니다.");
-    process.exit(1);
+    term.processExit(1);
   }
 
   if (!fs.existsSync(cphPath)) {
     chl.error("CPH 파일이 존재하지 않습니다");
-    process.exit(1);
+    term.processExit(1);
   }
 
   const commandSet = commands[ans.type];
@@ -208,7 +212,7 @@ const run = async (ans) => {
   if (allSuccess) {
     chl.info("테스트 결과\n");
     chl.success("모든 테스트를 통과했습니다.");
-    process.exit(0);
+    term.processExit(0);
   }
 
   const colSel = () => {
@@ -227,7 +231,7 @@ const run = async (ans) => {
       ],
       (err, arg) => {
         let idx = arg.selectedIndex;
-        if (idx == 0) process.exit(0);
+        if (idx == 0) term.processExit(0);
         idx--;
         if (results[idx].type != "fail") {
           colSel();
@@ -272,7 +276,7 @@ const main = () => {
       if (idx == 0) {
         if (!fs.existsSync(path.join(__dirname, "last.json"))) {
           chl.error("마지막으로 사용한 파일이 없습니다.");
-          process.exit(1);
+          term.processExit(1);
         }
 
         const last = JSON.parse(

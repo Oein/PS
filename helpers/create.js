@@ -13,6 +13,10 @@ const chlx = require("./chalk").default;
 var term = require("terminal-kit").terminal;
 const chl = new chlx(term);
 
+process.stdin.on("data", (data) => {
+  if (data.toString() === "\u0003") term.processExit(0);
+});
+
 /**
  *
  * @param {string} srcPath
@@ -244,7 +248,7 @@ const main = () => {
               number: ans.number,
             })
           );
-          process.exit(0);
+          term.processExit(0);
         });
       });
     }

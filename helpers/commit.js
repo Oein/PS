@@ -6,6 +6,10 @@ const chlx = require("./chalk").default;
 var term = require("terminal-kit").terminal;
 const chl = new chlx(term);
 
+process.stdin.on("data", (data) => {
+  if (data.toString() === "\u0003") term.processExit(0);
+});
+
 /**
  *
  * @param {{type:"cpp"|"py"|"js";number:number;service:"jungol"|"acmicpc"|"nypc"|"biko"|"custom";}} ans
@@ -22,14 +26,14 @@ const run = async (ans) => {
   const fp = path.join(p, ans.number);
   if (!fs.existsSync(fp)) {
     chl.error("파일이 존재하지 않습니다.");
-    process.exit(1);
+    term.processExit(1);
   }
   console.log(
     execSync(
       `git add ${fp}; git commit -m "solve: ${ans.service} / ${ans.number}.${ans.type}"`
     ).toString()
   );
-  process.exit(0);
+  term.processExit(0);
 };
 
 const main = () => {
@@ -57,7 +61,7 @@ const main = () => {
       if (idx == 0) {
         if (!fs.existsSync(path.join(__dirname, "last.json"))) {
           chl.error("마지막으로 사용한 파일이 없습니다.");
-          process.exit(1);
+          term.processExit(1);
         }
         const last = JSON.parse(
           fs.readFileSync(path.join(__dirname, "last.json")).toString()
