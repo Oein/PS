@@ -176,7 +176,7 @@ const createCPH = async (ans) => {
 const main = () => {
   chl.query("서비스를 선택하세요.");
   term.singleColumnMenu(
-    ["jungol", "acmicpc", "nypc", "biko", "custom"].filter((x) => x.length > 0),
+    ["acmicpc", "jungol", "nypc", "biko", "custom"],
     (err, arg) => {
       const idx = arg.selectedIndex;
 

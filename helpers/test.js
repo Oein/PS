@@ -264,8 +264,8 @@ const main = () => {
   term.singleColumnMenu(
     [
       lastExsist ? lastStr() : "",
-      "jungol",
       "acmicpc",
+      "jungol",
       "nypc",
       "biko",
       "custom",
