@@ -5,6 +5,7 @@ const { exec, execSync, execFile, spawn } = require("child_process");
 const chlx = require("./chalk").default;
 var term = require("terminal-kit").terminal;
 const chl = new chlx(term);
+const { PRO } = require("./const");
 
 const crypto = require("crypto");
 
@@ -231,7 +232,7 @@ const run = async (ans) => {
       ],
       (err, arg) => {
         let idx = arg.selectedIndex;
-        if (idx == 0) term.processExit(0);
+        if (idx == 0) return term.processExit(0);
         idx--;
         if (results[idx].type != "fail") {
           colSel();
