@@ -8,6 +8,7 @@ const chl = new chlx(term);
 const { PRO } = require("./const");
 
 const crypto = require("crypto");
+const { default: gfp } = require("./getFilePath");
 
 process.stdin.on("data", (data) => {
   if (data.toString() === "\u0003") term.processExit(0);
@@ -46,10 +47,9 @@ const commands = {
 const run = async (ans) => {
   const ansn = ans.number.toString();
   const ansTwo = ansn.slice(0, ansn.length - 2);
-  const p = path.join(__dirname, "..", ans.service, ansTwo + "__");
+  let fp = path.join(__dirname, "..", ans.service, gfp(ans.number));
 
   // 저장된 폴더
-  let fp = path.join(p, ans.number);
   if (ans.service == "custom") {
     fp = path.join(__dirname, "..", "custom", ans.number);
   }
@@ -229,10 +229,15 @@ const run = async (ans) => {
             ? `#${i + 1} 테스트: 실패`
             : `#${i + 1} 테스트: 시간 초과`;
         }),
+        "Rerun",
       ],
       (err, arg) => {
         let idx = arg.selectedIndex;
         if (idx == 0) return term.processExit(0);
+        if (idx == results.length + 1) {
+          run(ans);
+          return;
+        }
         idx--;
         if (results[idx].type != "fail") {
           colSel();

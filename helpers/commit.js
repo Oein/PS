@@ -6,6 +6,8 @@ const chlx = require("./chalk").default;
 var term = require("terminal-kit").terminal;
 const chl = new chlx(term);
 
+const gfp = require("./getFilePath").default;
+
 process.stdin.on("data", (data) => {
   if (data.toString() === "\u0003") term.processExit(0);
 });
@@ -16,21 +18,17 @@ process.stdin.on("data", (data) => {
  * @returns
  */
 const run = async (ans) => {
-  const ansn = ans.number.toString();
-  const ansTwo = ansn.slice(0, ansn.length - 2);
-  let p = path.join(__dirname, "../", ans.service, ansTwo + "__");
+  let p = path.join(__dirname, "..", ans.service, gfp(ans.number));
   if (ans.service == "custom") {
-    p = path.join(__dirname, "../", "custom");
+    p = path.join(__dirname, "../", "custom", ans.number);
   }
-
-  const fp = path.join(p, ans.number);
-  if (!fs.existsSync(fp)) {
+  if (!fs.existsSync(p)) {
     chl.error("파일이 존재하지 않습니다.");
     term.processExit(1);
   }
   console.log(
     execSync(
-      `git add ${fp}; git commit -m "solve: ${ans.service} / ${ans.number}.${ans.type}"`
+      `git add ${p}; git commit -m "solve: ${ans.service} / ${ans.number}.${ans.type}"`
     ).toString()
   );
   term.processExit(0);
