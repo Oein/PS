@@ -235,7 +235,7 @@ const run = async (ans) => {
     results = [...origre];
     term.singleColumnMenu(
       [
-        "Exit",
+        "Rerun",
         ...results.map((v, i) => {
           return v.type == "success"
             ? `#${i + 1} 테스트: 성공`
@@ -243,12 +243,12 @@ const run = async (ans) => {
             ? `#${i + 1} 테스트: 실패`
             : `#${i + 1} 테스트: 시간 초과`;
         }),
-        "Rerun",
+        "Exit",
       ],
       (err, arg) => {
         let idx = arg.selectedIndex;
-        if (idx == 0) return term.processExit(0);
-        if (idx == results.length + 1) {
+        if (idx == results.length + 1) return term.processExit(0);
+        if (idx == 0) {
           run(ans);
           return;
         }
