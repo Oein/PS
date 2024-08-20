@@ -90,7 +90,10 @@ const run = async (ans) => {
     execSync(
       commandSet.build
         .replace("$OUT", buildOUTPUTPath)
-        .replace("$SRC", filePath)
+        .replace("$SRC", filePath),
+      {
+        stdio: "pipe",
+      }
     );
     spinner.animate(0);
     term("\n");
@@ -158,7 +161,7 @@ const run = async (ans) => {
     title: "테스트 진행중",
   });
 
-  const results = [];
+  let results = [];
 
   let i = 0;
   let allSuccess = true;
@@ -174,11 +177,18 @@ const run = async (ans) => {
           results.push({
             type: "timeout",
           });
+          allSuccess = false;
+          fs.writeFileSync(
+            path.join(fp, "run_" + i + ".expected"),
+            test.output
+          );
+          fs.writeFileSync(path.join(fp, "run_" + i + ".received"), buf);
           res();
         },
         CPH.timeLimit == 0 ? 1000 : CPH.timeLimit
       );
       child.stdin.write(test.input);
+      child.stdin.end();
       let buf = "";
       child.stdout.on("data", (data) => {
         buf += data.toString();
@@ -214,11 +224,15 @@ const run = async (ans) => {
     chl.info("테스트 결과\n");
     chl.success("모든 테스트를 통과했습니다.");
     term.processExit(0);
+    return;
   }
+
+  const origre = [...results];
 
   const colSel = () => {
     term.clear();
     chl.info("테스트 결과\n");
+    results = [...origre];
     term.singleColumnMenu(
       [
         "Exit",
@@ -239,7 +253,7 @@ const run = async (ans) => {
           return;
         }
         idx--;
-        if (results[idx].type != "fail") {
+        if (results[idx].type == "success") {
           colSel();
           return;
         }
