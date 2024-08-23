@@ -60,11 +60,24 @@ const run = async (ans) => {
 
   // 소스코드 파일 경로
   const filePath = path.join(fp, ans.number + "." + ans.type);
-  const cphPath = path.join(
-    fp,
-    ".cph",
-    "." + ansn + "." + ans.type + "_" + rand(filePath) + ".prob"
-  );
+  const getCPH = () => {
+    const CPH_DIR = path.join(fp, ".cph");
+    if (!fs.existsSync(CPH_DIR)) {
+      chl.error("CPH 폴더가 존재하지 않습니다.");
+      term.processExit(1);
+      return;
+    }
+    const files = fs
+      .readdirSync(CPH_DIR)
+      .filter((x) => x.startsWith(`.${ansn}.${ans.type}_`));
+    if (files.length == 0) {
+      chl.error("CPH 파일이 존재하지 않습니다.");
+      term.processExit(1);
+      return;
+    }
+    return files[0];
+  };
+  const cphPath = getCPH();
 
   // 소스코드 파일이 존재하지 않을 경우
   // cph 파일이 존재하지 않을 경우
@@ -168,11 +181,13 @@ const run = async (ans) => {
   for (const test of CPH.tests) {
     i++;
     await new Promise((res) => {
+      let isTOUT = false;
       const child = spawn(
         commandSet.run.replace("$SRC", cphPath).replace("$OUT", buildOUTPUTPath)
       );
       const tout = setTimeout(
         () => {
+          isTOUT = true;
           child.kill();
           results.push({
             type: "timeout",
@@ -194,6 +209,7 @@ const run = async (ans) => {
         buf += data.toString();
       });
       child.stdout.on("end", () => {
+        if (isTOUT) return;
         clearTimeout(tout);
         if (matcher(buf, test.output)) {
           results.push({
