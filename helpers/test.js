@@ -69,13 +69,15 @@ const run = async (ans) => {
     }
     const files = fs
       .readdirSync(CPH_DIR)
-      .filter((x) => x.startsWith(`.${ansn}.${ans.type}_`));
+      .filter(
+        (x) => x.startsWith(`.${ansn}.${ans.type}_`) && x.endsWith(".prob")
+      );
     if (files.length == 0) {
       chl.error("CPH 파일이 존재하지 않습니다.");
       term.processExit(1);
       return;
     }
-    return files[0];
+    return path.join(CPH_DIR, files[0]);
   };
   const cphPath = getCPH();
 
