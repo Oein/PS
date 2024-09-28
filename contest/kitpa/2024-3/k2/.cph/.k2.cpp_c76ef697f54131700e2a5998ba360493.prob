@@ -1,0 +1,1 @@
+{"name":"Local: k2","url":"/Users/oein/oein/Pjs/C++/PS/custom/k2/k2.cpp","tests":[{"id":1727504410878,"input":"10\n)<(<()X())\n","output":"11\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/oein/oein/Pjs/C++/PS/custom/k2/k2.cpp","group":"local","local":true}
