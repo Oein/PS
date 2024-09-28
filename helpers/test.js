@@ -93,6 +93,12 @@ const run = async (ans) => {
     term.processExit(1);
   }
 
+  // write last file data
+  fs.writeFileSync(
+    path.join(__dirname, "last.json"),
+    JSON.stringify(ans, null, 2)
+  );
+
   const commandSet = commands[ans.type];
 
   const buildOUTPUTPath = cphPath.replace(".prob", ".out");
