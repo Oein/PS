@@ -175,7 +175,7 @@ const main = () => {
       const idx = arg.selectedIndex;
 
       chl.query("언어를 선택하세요.");
-      term.singleColumnMenu(["cpp", "py", "js"], (err, larg) => {
+      term.singleColumnMenu(["cpp", "py", "js", "rs"], (err, larg) => {
         chl.query("문제 번호를 입력하세요: ");
         term.inputField({}, async (err, num) => {
           const ans = {
