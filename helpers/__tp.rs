@@ -148,7 +148,6 @@ impl RustIO {
         }
 
         let result = self.buffer[start..self.cursor].to_vec();
-        self.cursor += 1;
         result
     }
 
@@ -160,7 +159,6 @@ impl RustIO {
             self.cursor += 1;
         }
 
-        self.cursor += 1;
         String::from_utf8(self.buffer[start..self.cursor].to_vec()).unwrap()
     }
 }
