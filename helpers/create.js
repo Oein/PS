@@ -119,6 +119,7 @@ const createAcmicpcProblem = async (ans) => {
         let opt = $("#sample-output-" + i.toString()).text();
         if (!ipt || !opt) break;
         samples.push({ input: ipt, output: opt });
+        console.log("Sample " + i.toString() + " found.");
       } catch (e) {
         break;
       }
@@ -135,6 +136,7 @@ const createAcmicpcProblem = async (ans) => {
       milisec: milisec,
       memory: memory,
     };
+    console.log("Performance limit",data);
     return data;
   }
   const data = await getBoj(ans.number);
