@@ -68,6 +68,11 @@
     "variant": "cpp",
     "algorithm": "cpp",
     "type_traits": "cpp",
-    "cassert": "cpp"
+    "cassert": "cpp",
+    "execution": "cpp",
+    "memory": "cpp",
+    "forward_list": "cpp",
+    "print": "cpp",
+    "numeric": "cpp"
   }
 }
