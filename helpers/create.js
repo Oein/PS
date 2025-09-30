@@ -169,7 +169,73 @@ const createCPH = async (ans) => {
   return;
 };
 
-const main = () => {
+const handleProblem = async (ans) => {
+  let p = path.join(__dirname, "..", ans.service, gfp(ans.number));
+  if (ans.service == "custom")
+    p = path.join(__dirname, "..", "custom", ans.number);
+  if (!hasCPH(ans)) await createCPH(ans);
+  if (!fs.existsSync(p)) {
+    fs.mkdirSync(p, {
+      recursive: true,
+    });
+  }
+
+  let code = "";
+  const fp = path.join(p, ans.number + "." + ans.type);
+  if (!fs.existsSync(fp)) {
+    if (fs.existsSync(path.join(__dirname, "__tp." + ans.type)))
+      code = fs
+        .readFileSync(path.join(__dirname, "__tp." + ans.type))
+        .toString();
+    fs.writeFileSync(fp, code);
+  }
+  const md = path.join(p, "README.md");
+  if (!fs.existsSync(md)) {
+    if (ans.service == "custom") {
+      fs.writeFileSync(md, `# Custom Problem ${ans.number}\n\n`);
+    } else
+      fs.writeFileSync(
+        md,
+        "# " +
+          ans.number +
+          "\n\nProblem from [" +
+          ans.service +
+          "](" +
+          (() => {
+            if (ans.service == "jungol")
+              return "https://jungol.co.kr/problem/" + ans.number;
+            if (ans.service == "acmicpc")
+              return "https://www.acmicpc.net/problem/" + ans.number;
+            return "";
+          })() +
+          ")\n\n"
+      );
+  }
+  execSync(`${PRO} ${fp}`);
+  fs.writeFileSync(
+    path.join(__dirname, "last.json"),
+    JSON.stringify({
+      service: ans.service,
+      type: ans.type,
+      number: ans.number,
+    })
+  );
+  term.processExit(0);
+};
+
+const main = async () => {
+  const problemNumber = process.argv[2];
+  if (problemNumber) {
+    if (!isNaN(problemNumber)) {
+      const ans = {
+        service: "acmicpc",
+        type: "cpp",
+        number: parseInt(problemNumber),
+      };
+      await handleProblem(ans);
+      return;
+    }
+  }
   chl.query("서비스를 선택하세요.");
   term.singleColumnMenu(
     ["acmicpc", "jungol", "nypc", "biko", "custom"],
@@ -185,58 +251,7 @@ const main = () => {
             type: larg.selectedText,
             number: num,
           };
-
-          let p = path.join(__dirname, "..", ans.service, gfp(ans.number));
-          if (ans.service == "custom")
-            p = path.join(__dirname, "..", "custom", ans.number);
-          if (!hasCPH(ans)) await createCPH(ans);
-          if (!fs.existsSync(p)) {
-            fs.mkdirSync(p, {
-              recursive: true,
-            });
-          }
-
-          let code = "";
-          const fp = path.join(p, ans.number + "." + ans.type);
-          if (!fs.existsSync(fp)) {
-            if (fs.existsSync(path.join(__dirname, "__tp." + ans.type)))
-              code = fs
-                .readFileSync(path.join(__dirname, "__tp." + ans.type))
-                .toString();
-            fs.writeFileSync(fp, code);
-          }
-          const md = path.join(p, "README.md");
-          if (!fs.existsSync(md)) {
-            if (ans.service == "custom") {
-              fs.writeFileSync(md, `# Custom Problem ${ans.number}\n\n`);
-            } else
-              fs.writeFileSync(
-                md,
-                "# " +
-                  ans.number +
-                  "\n\nProblem from [" +
-                  ans.service +
-                  "](" +
-                  (() => {
-                    if (ans.service == "jungol")
-                      return "https://jungol.co.kr/problem/" + ans.number;
-                    if (ans.service == "acmicpc")
-                      return "https://www.acmicpc.net/problem/" + ans.number;
-                    return "";
-                  })() +
-                  ")\n\n"
-              );
-          }
-          execSync(`${PRO} ${fp}`);
-          fs.writeFileSync(
-            path.join(__dirname, "last.json"),
-            JSON.stringify({
-              service: ans.service,
-              type: ans.type,
-              number: ans.number,
-            })
-          );
-          term.processExit(0);
+          await handleProblem(ans);
         });
       });
     }
