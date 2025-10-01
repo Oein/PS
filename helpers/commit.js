@@ -34,8 +34,22 @@ const run = async (ans) => {
   term.processExit(0);
 };
 
-const main = () => {
+const main = async () => {
   term.clear();
+
+  const problemNumber = process.argv[2];
+  if (problemNumber) {
+    if (!isNaN(problemNumber)) {
+      const ans = {
+        service: "acmicpc",
+        type: "cpp",
+        number: parseInt(problemNumber),
+      };
+      await run(ans);
+      return;
+    }
+  }
+
   const lastExsist = fs.existsSync(path.join(__dirname, "last.json"));
   const lastStr = () => {
     const last = JSON.parse(
