@@ -1,47 +1,30 @@
 let fs = require("fs");
 let path = require("path");
 const { default: gfp } = require("./getFilePath");
-const BASEDIR = path.join(__dirname, "..", "jungol_new");
+const BASEDIR = path.join(__dirname, "..", "moved");
 fs.mkdirSync(BASEDIR, {
   recursive: true,
 });
-const wk = (p) => {
-  let files = fs.readdirSync(p);
+const wk = (wpt) => {
+  let files = fs.readdirSync(path.join(__dirname, "..", wpt));
   for (let file of files) {
-    if (file == ".cph") continue;
     if (file == ".git") continue;
     if (file == ".DS_Store") continue;
-    let stat = fs.statSync(p + "/" + file);
+    let stat = fs.statSync(path.join(__dirname, "..", wpt, file));
     if (stat.isDirectory()) {
-      let fil = fs.readdirSync(p + "/" + file);
-      for (let f of fil) {
-        if (f == ".cph") continue;
-        if (f == ".git") continue;
-        if (f == ".DS_Store") continue;
-        const gp = gfp(f);
-        fs.mkdirSync(path.join(BASEDIR, gp, ".."), {
-          recursive: true,
-        });
-        // copy from p + "/" + file + "/" + f to BASEDIR + "/" + gp
-        fs.cpSync(path.join(p, file, f), path.join(BASEDIR, gp), {
-          recursive: true,
-        });
-      }
+      wk(wpt + "/" + file);
+    } else {
+      let newPath = path.join(BASEDIR, wpt.replace(/_/g, "x"));
+      fs.mkdirSync(newPath, {
+        recursive: true,
+      });
+      fs.copyFileSync(
+        path.join(__dirname, "..", wpt, file),
+        path.join(newPath, file)
+      );
+      console.log(newPath);
     }
-    // if (stat.isDirectory()) {
-    //   wk(p + "/" + file);
-    // } else {
-    //   console.log(p, file);
-    //   fs.mkdirSync(path.join(p, file.split(".")[0]), {
-    //     recursive: true,
-    //   });
-    //   fs.renameSync(path.join(p, file), path.join(p, file.split(".")[0], file));
-    //   fs.writeFileSync(
-    //     path.join(p, file.split(".")[0], "README.md"),
-    //     "# " + file.split(".")[0]
-    //   );
-    // }
   }
 };
 
-wk(path.join(__dirname, "..", "jungol"));
+wk("acmicpc");

@@ -4,7 +4,7 @@ const gfp = (number) => {
   const len = nstr.length;
   const path = [];
   for (let i = 0; i < len; i++) {
-    path.push(nstr.slice(0, i) + nstr[i] + "_".repeat(len - i - 1));
+    path.push(nstr.slice(0, i) + nstr[i] + "x".repeat(len - i - 1));
   }
   return path.join(pth.sep);
 };
