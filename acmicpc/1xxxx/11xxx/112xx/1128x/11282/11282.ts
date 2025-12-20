@@ -1,7 +1,7 @@
 function solution(io: NodeIO): void {
-  const k = io.readInt();
-  const kNum = "가".charCodeAt(0) + k - 1;
-  io.write(String.fromCharCode(kNum));
+  const k = io.readWord();
+  const kNum = k.charCodeAt(0) - "가".charCodeAt(0) + 1;
+  io.write(kNum);
 }
 
 // FROM: https://github.com/MyAeroCode/PS-TypeScript-Baekjoon/blob/master/src/solution.ts
