@@ -1,0 +1,1 @@
+{"name":"Local: 11945","url":"acmicpc/1xxxx/11xxx/119xx/1194x/11945/11945.ts","tests":[{"input":"5 7\n0010000\n0111010\n1111111\n0111010\n0010000\n","output":"0000100\n0101110\n1111111\n0101110\n0000100\n","id":1766250058771}],"interactive":false,"memoryLimit":32,"timeLimit":1000,"srcPath":"acmicpc/1xxxx/11xxx/119xx/1194x/11945/11945.ts","group":"local","local":true}
