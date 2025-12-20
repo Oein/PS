@@ -1,0 +1,1 @@
+{"name":"Local: 14470","url":"acmicpc/1xxxx/14xxx/144xx/1447x/14470/14470.ts","tests":[{"input":"-10\n20\n5\n10\n3\n","output":"120\n","id":1766250594872},{"input":"35\n92\n31\n50\n11\n","output":"627\n","id":1766250594772}],"interactive":false,"memoryLimit":512,"timeLimit":2000,"srcPath":"acmicpc/1xxxx/14xxx/144xx/1447x/14470/14470.ts","group":"local","local":true}
