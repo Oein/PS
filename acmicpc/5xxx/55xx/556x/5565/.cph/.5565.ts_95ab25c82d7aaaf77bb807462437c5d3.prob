@@ -1,0 +1,1 @@
+{"name":"Local: 5565","url":"acmicpc/5xxx/55xx/556x/5565/5565.ts","tests":[{"input":"9850\n1050\n800\n420\n380\n600\n820\n2400\n1800\n980\n","output":"600\n","id":1766248683688}],"interactive":false,"memoryLimit":128,"timeLimit":1000,"srcPath":"acmicpc/5xxx/55xx/556x/5565/5565.ts","group":"local","local":true}
