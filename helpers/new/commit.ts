@@ -200,6 +200,14 @@ async function main() {
     solutionPath: solutionPath,
   });
   child_process.execSync(`git add "${path.resolve(cphPath)}"`);
+
+  const readmePath = path.join(
+    path.dirname(path.dirname(solutionPath)),
+    "README.md"
+  );
+  if (fs.existsSync(readmePath)) {
+    child_process.execSync(`git add "${path.resolve(readmePath)}"`);
+  }
   child_process.execSync(
     `git commit -m "solve: ${service} / ${problemId}.${language}"`
   );
