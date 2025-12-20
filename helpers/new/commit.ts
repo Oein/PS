@@ -191,7 +191,9 @@ async function main() {
     ? `${service}/${problemId}/${problemId}.${language}`
     : service + "/" + getBasePath(problemId) + "/" + problemId + "." + language;
 
-  child_process.execSync(`git add "${path.resolve(solutionPath)}"`);
+  try {
+    child_process.execSync(`git add "${path.resolve(solutionPath)}"`);
+  } catch (e) {}
   // add .cph
   const cphPath = getCPHPath({
     pid: problemId,
@@ -199,14 +201,15 @@ async function main() {
     lang: language as Language,
     solutionPath: solutionPath,
   });
-  child_process.execSync(`git add "${path.resolve(cphPath)}"`);
+  try {
+    child_process.execSync(`git add "${path.resolve(cphPath)}"`);
+  } catch (e) {}
 
-  const readmePath = path.join(
-    path.dirname(path.dirname(solutionPath)),
-    "README.md"
-  );
+  const readmePath = path.join(path.dirname(solutionPath), "README.md");
   if (fs.existsSync(readmePath)) {
-    child_process.execSync(`git add "${path.resolve(readmePath)}"`);
+    try {
+      child_process.execSync(`git add "${path.resolve(readmePath)}"`);
+    } catch (e) {}
   }
   child_process.execSync(
     `git commit -m "solve: ${service} / ${problemId}.${language}"`
