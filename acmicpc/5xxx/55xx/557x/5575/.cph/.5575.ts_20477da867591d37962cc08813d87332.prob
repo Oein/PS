@@ -1,0 +1,1 @@
+{"name":"Local: 5575","url":"acmicpc/5xxx/55xx/557x/5575/5575.ts","tests":[{"input":"9 0 0 18 0 0\n9 0 1 18 0 0\n12 14 52 12 15 30\n","output":"9 0 0\n8 59 59\n0 0 38\n","id":1766249203163}],"interactive":false,"memoryLimit":128,"timeLimit":1000,"srcPath":"acmicpc/5xxx/55xx/557x/5575/5575.ts","group":"local","local":true}
