@@ -201,7 +201,7 @@ async function main() {
   });
   child_process.execSync(`git add "${path.resolve(cphPath)}"`);
   child_process.execSync(
-    `git commit -m "Create solution for ${service} ${problemId} in ${language}"`
+    `git commit -m "solve: ${service} / ${problemId}.${language}"`
   );
   chl.success("Committed solution and .cph file to git.");
 }
