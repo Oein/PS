@@ -1,6 +1,6 @@
 let fs = require("fs");
 let path = require("path");
-const { default: gfp } = require("./getFilePath");
+const { default: gfp } = require("../getFilePath");
 const BASEDIR = path.join(__dirname, "..", "moved");
 fs.mkdirSync(BASEDIR, {
   recursive: true,

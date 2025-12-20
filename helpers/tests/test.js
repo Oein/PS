@@ -2,13 +2,13 @@ const path = require("path");
 const fs = require("fs");
 const { exec, execSync, execFile, spawn } = require("child_process");
 
-const chlx = require("./chalk").default;
+const chlx = require("../chalk").default;
 var term = require("terminal-kit").terminal;
 const chl = new chlx(term);
-const { PRO } = require("./const");
+const { PRO } = require("../const");
 
 const crypto = require("crypto");
-const { default: gfp } = require("./getFilePath");
+const { default: gfp } = require("../getFilePath");
 
 process.stdin.on("data", (data) => {
   if (data.toString() === "\u0003") term.processExit(0);

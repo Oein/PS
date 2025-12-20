@@ -17,8 +17,7 @@
     "@types/terminal-kit": "^2.5.6"
   },
   "scripts": {
-    "cr": "bun run helpers/create.js",
-    "co": "bun run helpers/commit.js",
-    "te": "bun run helpers/test.js"
+    "cr": "bun run helpers/new/create.ts",
+    "co": "bun run helpers/new/commit.ts"
   }
 }
