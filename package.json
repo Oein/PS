@@ -18,6 +18,7 @@
   },
   "scripts": {
     "cr": "bun run helpers/new/create.ts",
-    "co": "bun run helpers/new/commit.ts"
+    "co": "bun run helpers/new/commit.ts",
+    "ts": "bun run helpers/new/runLastTS.ts"
   }
 }
