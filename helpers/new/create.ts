@@ -168,7 +168,7 @@ async function saveCPH(
       interactive: false,
       memoryLimit: prob.memory,
       timeLimit: prob.milisec,
-      srcPath: problem.solutionPath,
+      srcPath: path.resolve(problem.solutionPath),
       group: "local",
       local: true,
     })
