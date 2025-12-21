@@ -1,0 +1,1 @@
+{"name":"Local: 15439","url":"acmicpc/1xxxx/15xxx/154xx/1543x/15439/15439.ts","tests":[{"input":"1\n","output":"0\n","id":1766295874760},{"input":"2\n","output":"2\n","id":1766295874660},{"input":"5\n","output":"20\n","id":1766295874560}],"interactive":false,"memoryLimit":256,"timeLimit":2000,"srcPath":"acmicpc/1xxxx/15xxx/154xx/1543x/15439/15439.ts","group":"local","local":true}
