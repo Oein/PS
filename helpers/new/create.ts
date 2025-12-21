@@ -6,7 +6,7 @@ import getBasePath from "./getFilePath";
 import { getBoj, ProbData } from "./probData";
 import crypto from "crypto";
 import path from "path";
-import fs from "fs";
+import fs, { existsSync } from "fs";
 import child_process from "child_process";
 
 const chl = new chlkterm(terminal);
@@ -145,7 +145,7 @@ function getCPHPath(problem: {
   const hashlize = () => {
     const hash = crypto
       .createHash("md5")
-      .update(problem.solutionPath)
+      .update(path.resolve(problem.solutionPath))
       .digest("hex")
       .substr(0);
     return hash;
@@ -180,7 +180,7 @@ async function saveCPH(
     f,
     JSON.stringify({
       name: "Local: " + problem.pid,
-      url: problem.solutionPath,
+      url: path.resolve(problem.solutionPath),
       tests: prob.samples.map((v, i) => {
         return {
           ...v,
@@ -216,6 +216,10 @@ async function setupCPH(problem: {
 }
 
 async function setupCodeFile(solutionPath: string, lang: Language) {
+  if (existsSync(solutionPath)) {
+    chl.log("Solution file already exists at " + solutionPath);
+    return;
+  }
   const template = path.join(__dirname, "template", lang + "." + lang);
   if (fs.existsSync(template)) {
     const content = fs.readFileSync(template, "utf-8");
