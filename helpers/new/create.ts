@@ -8,6 +8,7 @@ import crypto from "crypto";
 import path from "path";
 import fs, { existsSync } from "fs";
 import child_process from "child_process";
+import getCPHPath from "./cphPath";
 
 const chl = new chlkterm(terminal);
 process.stdin.on("data", (data) => {
@@ -134,30 +135,6 @@ async function getProbData(
 ): Promise<ProbData | null> {
   if (service == "acmicpc") return getBoj(pid);
   return null;
-}
-
-function getCPHPath(problem: {
-  pid: string;
-  service: Service;
-  lang: Language;
-  solutionPath: string;
-}) {
-  const hashlize = () => {
-    const hash = crypto
-      .createHash("md5")
-      .update(path.resolve(problem.solutionPath))
-      .digest("hex")
-      .substr(0);
-    return hash;
-  };
-
-  const f = path.join(
-    problem.solutionPath,
-    "..",
-    ".cph",
-    "." + problem.pid + "." + problem.lang + "_" + hashlize() + ".prob"
-  );
-  return f;
 }
 
 async function saveCPH(
