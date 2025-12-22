@@ -198,6 +198,10 @@ async function setupCodeFile(solutionPath: string, lang: Language) {
     return;
   }
   const template = path.join(__dirname, "template", lang + "." + lang);
+  const dir = path.dirname(solutionPath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
   if (fs.existsSync(template)) {
     const content = fs.readFileSync(template, "utf-8");
     fs.writeFileSync(solutionPath, content);
